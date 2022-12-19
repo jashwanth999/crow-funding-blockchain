@@ -1,0 +1,183 @@
+import { Button, Paper, Typography } from "@mui/material";
+import FlipCard from "flip-card-react";
+import React, { useState } from "react";
+
+export default function Card({ data, navigate, index }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div style={{ width: "30%", margin: 5 }}>
+      <FlipCard
+        isFlipped={isFlipped}
+        key={data.title}
+        front={
+          <Paper
+            onClick={() => setIsFlipped(!isFlipped)}
+            elevation={1}
+            style={frontCardDiv}
+          >
+            <div
+              style={{
+                margin: 5,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <h5 style={{ fontWeight: "bold" }}>{data.title} </h5>
+              <Typography style={{ fontWeight: "bold" }}>
+                Start Data:{data.startDate}
+              </Typography>
+              <Typography style={{ fontWeight: "bold" }}>
+                End Date:{data.endDate}
+              </Typography>
+            </div>
+
+            <div
+              style={{
+                height: 5,
+                backgroundColor: data.isApproved
+                  ? "blue"
+                  : data.isSetMileStone
+                  ? "green"
+                  : "red",
+                width: "100%",
+              }}
+            />
+            <div style={{ margin: 5 }}>
+              <Typography
+                style={{
+                  color: data.isApproved
+                    ? "blue"
+                    : data.isSetMileStone
+                    ? "green"
+                    : "red",
+
+                  fontWeight: "bold",
+                }}
+              >
+                M1:{data.m1}{" "}
+              </Typography>
+              <Typography
+                style={{
+                  color: data.isApproved
+                    ? "blue"
+                    : data.isSetMileStone
+                    ? "green"
+                    : "red",
+                  fontWeight: "bold",
+                }}
+              >
+                M2:{data.m2}{" "}
+              </Typography>
+              <Typography
+                style={{
+                  color: data.isApproved
+                    ? "blue"
+                    : data.isSetMileStone
+                    ? "green"
+                    : "red",
+                  fontWeight: "bold",
+                }}
+              >
+                M3:{data.m3}{" "}
+              </Typography>
+            </div>
+
+            <div
+              style={{
+                height: 5,
+                backgroundColor: data.isApproved
+                  ? "blue"
+                  : data.isSetMileStone
+                  ? "green"
+                  : "red",
+                width: "100%",
+              }}
+            />
+            <div
+              style={{
+                marginTop: 10,
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography style={{ fontWeight: "bold" }}>
+                Total Amount Required:{data.amountToBeRaised} ETH{" "}
+              </Typography>
+              <Typography style={{ fontWeight: "bold" }}>
+                Amount Raised: {data.amountRaised} ETH{" "}
+              </Typography>
+            </div>
+          </Paper>
+        }
+        back={
+          <Paper
+            onClick={() => setIsFlipped(!isFlipped)}
+            elevation={1}
+            style={backCardDiv}
+          >
+            {!data.isSetMileStone && (
+              <Button
+                onClick={() => {
+                  navigate(`/startup-set-mile-stone/${index + 1}`);
+                }}
+                style={{ color: "white", fontWeight: "bold" }}
+                variant="contained"
+              >
+                {" "}
+                Set Milestone
+              </Button>
+            )}
+            <br />
+            <Typography> {data.desc}</Typography>
+            <br />
+
+            <Button
+              style={{ color: "white", fontWeight: "bold" }}
+              variant="contained"
+              color="success"
+            >
+              {" "}
+              Know more
+            </Button>
+            <br />
+
+            <Button
+              style={{ fontWeight: "bold" }}
+              color="error"
+              variant="contained"
+            >
+              {" "}
+              Abort project
+            </Button>
+          </Paper>
+        }
+        direction="horizontal"
+        width={"30%"}
+      />
+    </div>
+  );
+}
+
+const frontCardDiv = {
+  display: "flex",
+  flexDirection: "column",
+  borderRadius: 4,
+  backgroundColor: "white",
+  padding: 5,
+  height: 300,
+  alignItems: "center",
+};
+const backCardDiv = {
+  display: "flex",
+  flexDirection: "column",
+  borderRadius: 4,
+  backgroundColor: "rgb(229, 152, 102)",
+  padding: 5,
+  height: 300,
+  overflowY: "scroll",
+};

@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import Home from "./screens/Home";
+import { Route, Routes } from "react-router";
+import BackerRegister from "./auth_pages/register/BackerRegister";
+import BackerLogin from "./auth_pages/login/BackerLogin";
+import StartUpRegister from "./auth_pages/register/StartUpRegister";
+import StartUpLogin from "./auth_pages/login/StartUpLogin";
+import StartUpHome from "./startup/StartUpHome";
+import CreateProject from "./startup/CreateProject";
+import Milestone from "./startup/MileStone";
+import Admin from "./admin/Admin";
+import BackerHome from "./backer/BackerHome";
+import Funding from "./backer/Funding";
+import AdminLogin from "./admin/AdminLogin";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/backer-register" element={<BackerRegister />} />
+        <Route path="/backer-login" element={<BackerLogin />} />
+        <Route path="/startup-register" element={<StartUpRegister />} />
+        <Route path="/startup-login" element={<StartUpLogin />} />
+        <Route path="/startup-home" element={<StartUpHome />} />
+        <Route path="/startup-create-project" element={<CreateProject />} />
+        <Route path="/startup-set-mile-stone/:id" element={<Milestone />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/backer-home" element={<BackerHome />} />
+        <Route path="/backer-funds/:id" element={<Funding />} />
+      </Routes>
     </div>
   );
 }
