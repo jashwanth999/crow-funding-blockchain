@@ -1,6 +1,9 @@
 import Web3 from "web3/dist/web3.min.js";
 import { accountAction, crowdFundAction } from "../api/action";
 import CrowdFund from "../build/contracts/CrowdFund.json";
+
+// loading web3 and signing to window
+
 export const loadWeb3 = async () => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
@@ -13,8 +16,12 @@ export const loadWeb3 = async () => {
     );
   }
 };
+
+// fetching metamask accounts 
+
 export const loadBlockchainData = async (dispatch) => {
   const web3 = window.web3;
+  
   // Load account
 
   const accounts = await web3.eth.getAccounts();

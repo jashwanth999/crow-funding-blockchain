@@ -19,8 +19,25 @@ export default function Milestone() {
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+
+  // submitting milestones 
+
   const submitHandler = async (e) => {
     e.preventDefault();
+    const date1 = new Date(m1);
+    const date2 = new Date(m2);
+    const date3 = new Date(m3);
+
+    const diffTime = date2 - date1;
+
+    const diffTime2 = date3 - date2;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24));
+
+
+    if (diffDays <= 0 || diffDays2 <= 0)
+      return alert("Milestones are not valid");
 
     if (!m1 || !m3 || !m3) return alert("please fill all details");
 

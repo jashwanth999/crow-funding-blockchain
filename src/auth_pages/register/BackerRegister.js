@@ -14,14 +14,17 @@ export default function BackerRegister() {
     nameOfBacker: "",
     email: "",
     password: "",
+    mobile: "",
   });
-  const { nameOfBacker, email, password } = data;
+  const { nameOfBacker, email, password, mobile } = data;
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  // backer registration method
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (!nameOfBacker || !email || !password)
+    if (!nameOfBacker || !email || !password || !mobile)
       return alert("please fill all details");
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!email.match(mailformat)) {
@@ -30,7 +33,7 @@ export default function BackerRegister() {
     }
     try {
       await crowdFund.methods
-        .createBacker(nameOfBacker, email, password)
+        .createBacker(nameOfBacker, email, password, mobile, account)
         .send({ from: account });
       localStorage.setItem("backerUsername", nameOfBacker);
       localStorage.setItem("backerEmail", email);
@@ -88,6 +91,21 @@ export default function BackerRegister() {
                     type="text"
                     name="email"
                     value={email}
+                    onChange={changeHandler}
+                  />
+
+                  <p
+                    class="card-title"
+                    style={{ fontSize: "16px", marginTop: "5px" }}
+                  >
+                    Mobile
+                  </p>
+                  <input
+                    style={{ width: "100%" }}
+                    class="form-control"
+                    type="text"
+                    name="mobile"
+                    value={mobile}
                     onChange={changeHandler}
                   />
 

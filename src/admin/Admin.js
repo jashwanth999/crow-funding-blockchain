@@ -1,26 +1,28 @@
 import React from "react";
-import Navbar from "../auth_pages/Navbar";
-import ProjectCard from "../startup/ProjectCard";
+import AdminNavbar from "./AdminNavbar";
 import AdminProjectCard from "./AdminProjectCard";
 
 export default function Admin() {
+
   return (
     <>
-      <Navbar />
+      <AdminNavbar />
 
       <div style={rootDiv}>
         <div style={projectDiv}>
-          <h2 style={{ padding: 10 }}>PROJECTS</h2>
+          <h2 style={{ padding: 10, color: "white" }}>PROJECTS</h2>
 
           <div style={mileStoneDiv}>
             <span
               style={{
-                backgroundColor: "red",
+                backgroundColor: "rgb(231, 76, 60)",
                 padding: 2,
                 width: "30%",
                 display: "flex",
                 justifyContent: "center",
                 color: "white",
+                borderRadius: 2,
+                fontWeight: "bold",
               }}
             >
               {" "}
@@ -28,25 +30,29 @@ export default function Admin() {
             </span>
             <span
               style={{
-                backgroundColor: "green",
+                backgroundColor: "rgb(34, 153, 84)",
                 padding: 2,
                 width: "30%",
                 display: "flex",
                 justifyContent: "center",
                 color: "white",
+                borderRadius: 2,
+                fontWeight: "bold",
               }}
             >
               {" "}
-              Milestone set not yet approved{" "}
+              Milestone set but not yet approved{" "}
             </span>
             <span
               style={{
-                backgroundColor: "blue",
+                backgroundColor: "rgb(46, 134, 193)",
                 padding: 2,
                 width: "30%",
                 display: "flex",
                 justifyContent: "center",
                 color: "white",
+                borderRadius: 2,
+                fontWeight: "bold",
               }}
             >
               {" "}
@@ -63,7 +69,7 @@ export default function Admin() {
   );
 }
 const rootDiv = {
-  backgroundColor: "rgb(255, 158, 30)",
+  backgroundColor: "rgb(44, 62, 80)",
   display: "flex",
   flex: 1,
   minHeight: "100vh",
@@ -81,6 +87,7 @@ const projectDiv = {
   marginBottom: 20,
   alignItems: "center",
   flexDirection: "column",
+  backgroundColor: "rgb(40, 55, 71)",
 };
 
 const mileStoneDiv = {

@@ -12,11 +12,11 @@ export default function Navbar() {
   return (
     <nav
       style={{ padding: 10 }}
-      className="navbar fixed-top navbar-expand-lg navbar-light bg-dark "
+      className="navbar navbar-expand-lg navbar-light bg-dark "
     >
-      <a style={{ color: "white" }} className="navbar-brand" href="#">
+      <button style={{ color: "white" }} className="navbar-brand" href="#">
         Crowd Funding
-      </a>
+      </button>
       <button
         style={{ color: "white" }}
         className="navbar-toggler"
@@ -33,7 +33,11 @@ export default function Navbar() {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <a style={{ color: "white" }} className="nav-link" href="/">
+            <a
+              style={{ color: "white" }}
+              className="nav-link"
+              href="/startup-home"
+            >
               Home
             </a>
           </li>
@@ -65,12 +69,16 @@ export default function Navbar() {
           </Button>
         </li>
         <li className="nav-item">
-          <a style={{ color: "white" }} className="nav-link" href="#">
+          <a
+            style={{ color: "white" }}
+            className="nav-link"
+            href="/how-to-use/1"
+          >
             How to use
           </a>
         </li>
         <li className="nav-item">
-          <a style={{ color: "white" }} className="nav-link" href="#">
+          <a style={{ color: "white" }} className="nav-link" href="/help/1">
             help
           </a>
         </li>

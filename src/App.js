@@ -12,6 +12,9 @@ import Admin from "./admin/Admin";
 import BackerHome from "./backer/BackerHome";
 import Funding from "./backer/Funding";
 import AdminLogin from "./admin/AdminLogin";
+import HowToUse from "./helpers/HowToUse";
+import Help from "./helpers/Help";
+import Query from "./helpers/Query";
 function App() {
   return (
     <div className="App">
@@ -28,6 +31,9 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/backer-home" element={<BackerHome />} />
         <Route path="/backer-funds/:id" element={<Funding />} />
+        <Route path="/how-to-use/:id" element={<HowToUse />} />
+        <Route path="/help/:id" element={<Help />} />
+        <Route path="/query" element={< Query/>} />
       </Routes>
     </div>
   );

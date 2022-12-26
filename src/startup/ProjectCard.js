@@ -5,12 +5,52 @@ import { useNavigate } from "react-router";
 import Card from "./Card";
 
 export default function ProjectCard(props) {
+  const account = useSelector((state) => state.account.account);
   const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
 
-  const [isFlipped, setIsFlipped] = useState(false);
+  // const [isFlipped, setIsFlipped] = useState(false);
+
+  // for abort the project
+
+  const abortProject = async (id) => {
+    try {
+      console.log(id);
+      let adminApproveStage = projects[id].adminApproveStage;
+
+      let amount = adminApproveStage > 0 ? projects[id].amountRecieved : 0;
+
+      await crowdFund.methods
+        .rejectProject(id + 1)
+        .send({ from: account, value: amount });
+      window.location.reload();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  // after full amount raised , user can change the stage below function called
+
+  const changeStage = async (id) => {
+    try {
+      let adminApproveStage = projects[id].adminApproveStage;
+
+      let stage = projects[id].stage;
+      console.log(adminApproveStage, stage);
+
+      if (Math.abs(adminApproveStage - stage) !== 1)
+        return alert("Admin has not approved your current stage");
+
+      await crowdFund.methods.changeStage(id + 1).send({ from: account });
+      window.location.reload();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  // fetching all projects
 
   useEffect(() => {
     async function fetchProjects() {
@@ -24,7 +64,15 @@ export default function ProjectCard(props) {
         for (let i = 1; i <= projectCount; i++) {
           const res = await crowdFund.methods.startUpProjectList(i).call();
 
-          data.push(res);
+          const res2 = await crowdFund.methods.startUpProjectList2(i).call();
+
+          data.push({
+            ...res,
+            fileUrl: res2.fileUrl,
+            stage: res2.stage,
+            adminApproveStage: res2.adminApproveStage,
+            amountRecieved: res2.amountRecieved,
+          });
         }
 
         setProjects(data);
@@ -33,17 +81,32 @@ export default function ProjectCard(props) {
     fetchProjects();
   }, [crowdFund]);
 
+  // loading web3
+
   useEffect(() => {
     loadWeb3();
   }, []);
+
+  // loading blockchain data
+  
   useEffect(() => {
     loadBlockchainData(dispatch);
   }, [dispatch]);
 
+  console.log(projects);
+
   return (
     <div style={projectsCardDiv}>
       {projects.map((data, index) => {
-        return <Card data={data} navigate={navigate} index={index} />;
+        return (
+          <Card
+            data={data}
+            navigate={navigate}
+            index={index}
+            abortProject={abortProject}
+            changeStage={changeStage}
+          />
+        );
       })}
     </div>
   );

@@ -13,6 +13,9 @@ export default function AdminLogin() {
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  // admin login not integrated with solidity
+  
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -21,13 +24,12 @@ export default function AdminLogin() {
     try {
       if (email === "admin@gmail.com" && password === "admin123") {
         navigate("/admin");
-      }
+      } else return alert("wrong credentials");
     } catch (e) {
       return alert(e.message);
     }
   };
 
-  
   return (
     <>
       <Navbar />

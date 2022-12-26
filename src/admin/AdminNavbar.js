@@ -2,12 +2,12 @@ import { Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router";
 
-export default function BackerNavbar() {
+export default function AdminNavbar() {
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("backerUsername");
-    localStorage.removeItem("backerEmail");
+    // localStorage.removeItem("backerUsername");
+    // localStorage.removeItem("backerEmail");
     navigate("/");
   };
   return (
@@ -34,39 +34,17 @@ export default function BackerNavbar() {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <a
-              style={{ color: "white" }}
-              className="nav-link"
-              href="/backer-home"
-            >
+            <a style={{ color: "white" }} className="nav-link" href="/admin">
               Home
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              style={{ color: "white" }}
-              className="nav-link"
-              href="/backer-home"
-            >
-              My projects
             </a>
           </li>
         </ul>
       </div>
       <ul className="navbar-nav mr-auto">
         <li className="nav-item">
-          <a
-            style={{ color: "white" }}
-            className="nav-link"
-            href="/how-to-use/2"
-          >
-            How to use
-          </a>
-        </li>
-        <li className="nav-item">
-          <a style={{ color: "white" }} className="nav-link" href="/help/2">
-            help
-          </a>
+          <Button style={{ color: "white" }} className="nav-link" href="/query">
+            Queries
+          </Button>
         </li>
         <li className="nav-item">
           <Button

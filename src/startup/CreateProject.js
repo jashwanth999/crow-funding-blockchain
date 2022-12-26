@@ -16,18 +16,37 @@ export default function CreateProject() {
     startDate: "",
     endDate: "",
     amountToBeRaised: "",
+    projectUrl: "",
+    termsAndCondtion: "",
   });
-  const { title, description, startDate, endDate, amountToBeRaised } = data;
+  const {
+    title,
+    description,
+    startDate,
+    endDate,
+    amountToBeRaised,
+    projectUrl,
+    termsAndCondtion,
+  } = data;
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (!title || !description || !startDate || !endDate || !amountToBeRaised)
+    if (
+      !title ||
+      !description ||
+      !startDate ||
+      !endDate ||
+      !amountToBeRaised ||
+      !termsAndCondtion
+    )
       return alert("Please fill all details");
 
-    console.log(account);
+    const email = localStorage.getItem("email");
+
+    const res = await crowdFund.methods.startupUsersList(email).call();
 
     try {
       await crowdFund.methods
@@ -36,7 +55,11 @@ export default function CreateProject() {
           description,
           startDate,
           endDate,
-          amountToBeRaised
+          window.web3.utils.toWei(amountToBeRaised, "ether"),
+          projectUrl,
+          res.fileUrl,
+          account,
+          termsAndCondtion
         )
         .send({ from: account });
 
@@ -53,123 +76,152 @@ export default function CreateProject() {
     loadBlockchainData(dispatch);
   }, [dispatch]);
   return (
-    <>
+    <div style={{ backgroundColor: "rgb(44, 62, 80)", overflow: "scroll" }}>
       <Navbar />
-      <br />
+
       <div
         style={{
-          backgroundColor: "orange",
           height: "100vh",
           display: "flex",
           alignItems: "center",
           width: "100%",
           justifyContent: "center",
-          marginTop:30
+          marginTop:80
         
         }}
       >
-      
-          <form className="register_content">
-            <div class="card">
+  
+
+        <form className="register_content">
+          <div class="card">
+            <p
+              class="card-header"
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                outline: "none",
+                textDecoration: "none",
+              }}
+            >
+              Create New Project
+            </p>
+            <div class="card-body">
               <p
-                class="card-header"
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  outline: "none",
-                  textDecoration: "none",
-                }}
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
               >
-                Create New Project
+                Title of Project
               </p>
-              <div class="card-body">
-                <p
-                  class="card-title"
-                  style={{ fontSize: "16px", marginTop: "5px" }}
-                >
-                  Title of Project
-                </p>
-                <input
-                  style={{ width: "100%" }}
-                  class="form-control"
-                  type="text"
-                  name="title"
-                  value={title}
-                  onChange={changeHandler}
-                />
+              <input
+                style={{ width: "100%" }}
+                class="form-control"
+                type="text"
+                name="title"
+                value={title}
+                onChange={changeHandler}
+              />
 
-                <p
-                  class="card-title"
-                  style={{ fontSize: "16px", marginTop: "5px" }}
-                >
-                  Description of the project
-                </p>
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                Project URL
+              </p>
+              <input
+                style={{ width: "100%" }}
+                class="form-control"
+                type="text"
+                name="projectUrl"
+                value={projectUrl}
+                onChange={changeHandler}
+              />
 
-                <textarea
-                  style={{ width: "100%" }}
-                  class="form-control"
-                  name="description"
-                  value={description}
-                  onChange={changeHandler}
-                />
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                Description of the project
+              </p>
 
-                <p
-                  class="card-title"
-                  style={{ fontSize: "16px", marginTop: "5px" }}
-                >
-                  Start Date
-                </p>
+              <textarea
+                style={{ width: "100%" }}
+                class="form-control"
+                name="description"
+                value={description}
+                onChange={changeHandler}
+              />
 
-                <input
-                  style={{ width: "100%" }}
-                  class="form-control"
-                  type="date"
-                  name="startDate"
-                  value={startDate}
-                  onChange={changeHandler}
-                />
-                <p
-                  class="card-title"
-                  style={{ fontSize: "16px", marginTop: "5px" }}
-                >
-                  End Date
-                </p>
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                Start Date
+              </p>
 
-                <input
-                  style={{ width: "100%" }}
-                  class="form-control"
-                  type="date"
-                  name="endDate"
-                  value={endDate}
-                  onChange={changeHandler}
-                />
+              <input
+                style={{ width: "100%" }}
+                class="form-control"
+                type="date"
+                name="startDate"
+                value={startDate}
+                onChange={changeHandler}
+              />
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                End Date
+              </p>
 
-                <p
-                  class="card-title"
-                  style={{ fontSize: "16px", marginTop: "5px" }}
-                >
-                  Amount to be Raised(ETH)
-                </p>
+              <input
+                style={{ width: "100%" }}
+                class="form-control"
+                type="date"
+                name="endDate"
+                value={endDate}
+                onChange={changeHandler}
+              />
 
-                <input
-                  style={{ width: "100%" }}
-                  class="form-control"
-                  name="amountToBeRaised"
-                  value={amountToBeRaised}
-                  onChange={changeHandler}
-                />
-                <button
-                  type="button"
-                  class="btn btn-dark mt-2"
-                  onClick={submitHandler}
-                >
-                  submit
-                </button>
-              </div>
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                Amount to be Raised(ETH)
+              </p>
+
+              <input
+                style={{ width: "100%" }}
+                class="form-control"
+                name="amountToBeRaised"
+                value={amountToBeRaised}
+                onChange={changeHandler}
+              />
+
+              <p
+                class="card-title"
+                style={{ fontSize: "16px", marginTop: "5px" }}
+              >
+                Terms and Conditions
+              </p>
+
+              <textarea
+                style={{ width: "100%" }}
+                class="form-control"
+                name="termsAndCondtion"
+                value={termsAndCondtion}
+                onChange={changeHandler}
+              />
+              <button
+                type="button"
+                class="btn btn-dark mt-2"
+                onClick={submitHandler}
+              >
+                submit
+              </button>
             </div>
-          </form>
-        </div>
-    
-    </>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

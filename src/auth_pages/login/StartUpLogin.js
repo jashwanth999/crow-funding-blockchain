@@ -14,9 +14,13 @@ export default function StartUpLogin() {
     password: "",
   });
   const { email, password } = data;
+  const web3 = window.web3;
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  // startup login method
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -24,6 +28,8 @@ export default function StartUpLogin() {
 
     try {
       const res = await crowdFund.methods.startupUsersList(email).call();
+
+      console.log(res);
       if (res.password === password) {
         localStorage.setItem("username", res.username);
         localStorage.setItem("email", email);

@@ -1,53 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { loadBlockchainData, loadWeb3 } from "../../helpers/web3Helpers";
-import Navbar from "../Navbar";
+import { useNavigate, useParams } from "react-router";
+import { navBarMapper } from "./navBarMapper";
+import { loadBlockchainData, loadWeb3 } from "./web3Helpers";
 
-const BackerLogin = () => {
-  const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
-  const dispatch = useDispatch();
+export default function Help() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state.account.account);
+  const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
+  const { id } = useParams();
   const [data, setData] = useState({
-    name: "backer",
+    username: "",
     email: "",
-    password: "",
+    message: "",
   });
-  const { email, password } = data;
+  const { username, email, message } = data;
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // backer login method
+  // sending a query to admin
+  
   const submitHandler = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) return alert("Please fill all details");
+    if (!username || !email || !message)
+      return alert("Please fill all details");
 
     try {
-      const res = await crowdFund.methods.backerList(email).call();
-      if (res.password === password) {
-        localStorage.setItem("backerUsername", res.username);
-        localStorage.setItem("backerEmail", email);
-        navigate("/backer-home");
-      } else {
-        return alert("wrong user credintinals or please signup");
-      }
+      await crowdFund.methods
+        .addQuery(username, email, message)
+        .send({ from: account });
     } catch (e) {
       return alert(e.message);
     }
   };
-
   useEffect(() => {
     loadWeb3();
   }, []);
   useEffect(() => {
     loadBlockchainData(dispatch);
   }, [dispatch]);
+
   return (
     <>
-      <Navbar />
-
+      {navBarMapper[id]}
       <div className="registration_and_login">
         <center>
           <div className="register">
@@ -62,39 +59,40 @@ const BackerLogin = () => {
                     textDecoration: "none",
                   }}
                 >
-                  BACKER LOGIN
+                  Send Your Request
                 </p>
+
                 <div class="card-body">
-                  <p
-                    class="card-title"
-                    style={{ fontSize: "16px", marginTop: "5px" }}
-                  >
-                    Email Address
-                  </p>
                   <input
                     style={{ width: "100%" }}
                     class="form-control"
-                    placeholder="Email"
+                    placeholder="Enter your name"
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={changeHandler}
+                  />
+                  <br />
+
+                  <input
+                    style={{ width: "100%" }}
+                    class="form-control"
+                    placeholder="Enter Your Email"
                     type="text"
                     name="email"
                     value={email}
                     onChange={changeHandler}
                   />
 
-                  <p
-                    class="card-title"
-                    style={{ fontSize: "16px", marginTop: "5px" }}
-                  >
-                    Password
-                  </p>
+                  <br />
 
-                  <input
+                  <textarea
                     style={{ width: "100%" }}
                     class="form-control"
-                    placeholder="password"
-                    type="password"
-                    name="password"
-                    value={password}
+                    placeholder="Enter your message"
+                    type="text"
+                    name="message"
+                    value={message}
                     onChange={changeHandler}
                   />
                   <button
@@ -112,6 +110,14 @@ const BackerLogin = () => {
       </div>
     </>
   );
+}
+const rootDiv = {
+  backgroundColor: "rgb(44, 62, 80)",
+  display: "flex",
+  flex: 1,
+  minHeight: "100vh",
+  height: "auto",
+  flexDirection: "column",
+  alignItems: "center",
+  paddingTop: 20,
 };
-
-export default BackerLogin;

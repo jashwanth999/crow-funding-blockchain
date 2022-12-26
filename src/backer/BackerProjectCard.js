@@ -10,8 +10,6 @@ export default function BackerProjectCard(props) {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
 
-  const [isFlipped, setIsFlipped] = useState(false);
-
   const backerEmail = localStorage.getItem("backerEmail");
 
   useEffect(() => {
@@ -30,14 +28,21 @@ export default function BackerProjectCard(props) {
             .getMyFunds(backerEmail, i)
             .call();
 
-          data.push({ ...res, myFunds: myFunds });
+          const res2 = await crowdFund.methods.startUpProjectList2(i).call();
+
+          data.push({
+            ...res,
+            myFunds: myFunds,
+            adminApproveStage: res2.adminApproveStage,
+            amountRecieved: res2.amountRecieved,
+          });
         }
 
         setProjects(data);
       } catch (e) {}
     }
     fetchProjects();
-  }, [crowdFund]);
+  }, [crowdFund, backerEmail]);
 
   useEffect(() => {
     loadWeb3();

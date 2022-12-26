@@ -2,12 +2,33 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { loadBlockchainData, loadWeb3 } from "../../helpers/web3Helpers";
-// import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { storage } from "../../api/firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import Navbar from "../Navbar";
+import { Box, Button, Typography } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
+      <Box sx={{ width: "80%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 export default function StartUpRegister() {
   const account = useSelector((state) => state.account.account);
   const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
+  const [fileUrl, setFileUrl] = useState(null);
+  const [file, setFile] = useState("");
+  const [progress, setProgresspercent] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -15,10 +36,36 @@ export default function StartUpRegister() {
     nameOfStartup: "",
     email: "",
     password: "",
+    mobile: "",
   });
-  const { nameOfStartup, email, password } = data;
+  const { nameOfStartup, email, password, mobile } = data;
   const changeHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    if (!file) return;
+
+    const storageRef = ref(storage, `files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgresspercent(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFileUrl(downloadURL);
+        });
+      }
+    );
   };
 
   useEffect(() => {
@@ -28,10 +75,19 @@ export default function StartUpRegister() {
     loadBlockchainData(dispatch);
   }, [dispatch]);
 
+  // Start up registration method
+
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (!nameOfStartup || !email || !password)
+
+    // console.log(fileUrl); || !fileUrl
+
+    if (mobile.length !== 10) return alert("Please enter valid mobile number");
+
+    if (!nameOfStartup || !email || !password || !mobile || !fileUrl)
       return alert("Please fill all details");
+
+    if (mobile.length !== 10) return alert("Please enter valid mobile number");
 
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!email.match(mailformat)) {
@@ -40,7 +96,14 @@ export default function StartUpRegister() {
     }
     try {
       await crowdFund.methods
-        .createStartUpUser(nameOfStartup, email, password)
+        .createStartUpUser(
+          nameOfStartup,
+          email,
+          password,
+          mobile,
+          fileUrl,
+          account
+        )
         .send({ from: account });
       localStorage.setItem("username", nameOfStartup);
       localStorage.setItem("email", email);
@@ -107,6 +170,22 @@ export default function StartUpRegister() {
                     class="card-title"
                     style={{ fontSize: "16px", marginTop: "5px" }}
                   >
+                    Mobile
+                  </p>
+                  <input
+                    style={{ width: "100%" }}
+                    class="form-control"
+                    placeholder="Mobile"
+                    type="text"
+                    name="mobile"
+                    value={mobile}
+                    onChange={changeHandler}
+                  />
+
+                  <p
+                    class="card-title"
+                    style={{ fontSize: "16px", marginTop: "5px" }}
+                  >
                     Password
                   </p>
 
@@ -120,7 +199,32 @@ export default function StartUpRegister() {
                     onChange={changeHandler}
                   />
 
-                  <input type="file" />
+                  <input
+                    type="file"
+                    accept=".doc,.docx,.xml,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={(e) => {
+                      setFile(e.target.files[0]);
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flex: 1,
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <LinearProgressWithLabel value={progress} />
+                    <Button
+                      style={{ display: "flex", flex: 0.3 }}
+                      onClick={handleSubmit}
+                      variant="contained"
+                    >
+                      {" "}
+                      Upload
+                    </Button>
+                  </div>
 
                   <button
                     type="button"

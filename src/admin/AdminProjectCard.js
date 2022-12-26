@@ -4,7 +4,7 @@ import { loadBlockchainData, loadWeb3 } from "../helpers/web3Helpers";
 import { useNavigate } from "react-router";
 import AdminCard from "./AdminCard";
 
-export default function AdminProjectCard(props) {
+export default function AdminProjectCard() {
   const account = useSelector((state) => state.account.account);
   const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
   const dispatch = useDispatch();
@@ -22,7 +22,9 @@ export default function AdminProjectCard(props) {
 
   const rejectProject = async (id) => {
     try {
-      await crowdFund.methods.rejectProject(id + 1).send({ from: account });
+      await crowdFund.methods
+        .rejectProject(id + 1)
+        .send({ from: account, value: 0 });
     } catch (e) {
       alert(e.message);
     }
@@ -40,7 +42,14 @@ export default function AdminProjectCard(props) {
         for (let i = 1; i <= projectCount; i++) {
           const res = await crowdFund.methods.startUpProjectList(i).call();
 
-          data.push(res);
+          const res2 = await crowdFund.methods.startUpProjectList2(i).call();
+
+          data.push({
+            ...res,
+            fileUrl: res2.fileUrl,
+            stage: res2.stage,
+            adminApproveStage: res2.adminApproveStage,
+          });
         }
 
         setProjects(data);

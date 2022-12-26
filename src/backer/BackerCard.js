@@ -5,6 +5,8 @@ import React, { useState } from "react";
 export default function BackerCard({ data, navigate, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
+  if (data.title === "") return;
+
   return (
     <div style={{ width: "30%", margin: 5 }}>
       <FlipCard
@@ -25,7 +27,19 @@ export default function BackerCard({ data, navigate, index }) {
                 flexDirection: "column",
               }}
             >
-              <h5 style={{ fontWeight: "bold" }}>{data.title} </h5>
+              <h5 style={{ fontWeight: "bold" }}>
+                {data.title}{" "}
+                {Number(data.adminApproveStage - 1) === 3
+                  ? "(Completed)"
+                  : data.isApproved
+                  ? `(Approved ${
+                      data.amountRaised === data.amountToBeRaised &&
+                      Number(data.adminApproveStage - 1) > 0
+                        ? "stage " + Number(data.adminApproveStage - 1)
+                        : ""
+                    })`
+                  : "(Not Approved)"}{" "}
+              </h5>
               <Typography style={{ fontWeight: "bold" }}>
                 Start Data:{data.startDate}
               </Typography>
@@ -105,13 +119,19 @@ export default function BackerCard({ data, navigate, index }) {
               }}
             >
               <Typography style={{ fontWeight: "bold" }}>
-                Total Amount Required:{data.amountToBeRaised} ETH{" "}
+                Total Amount Required:
+                {window.web3.utils.fromWei(
+                  data.amountToBeRaised,
+                  "ether"
+                )} ETH{" "}
               </Typography>
               <Typography style={{ fontWeight: "bold" }}>
-                Amount Raised:{data.amountRaised} ETH{" "}
+                Amount Raised:
+                {window.web3.utils.fromWei(data.amountRaised, "ether")} ETH{" "}
               </Typography>
               <Typography style={{ fontWeight: "bold" }}>
-                You Funded:{data.myFunds} ETH{" "}
+                You Funded:{window.web3.utils.fromWei(data.myFunds, "ether")}{" "}
+                ETH{" "}
               </Typography>
             </div>
           </Paper>
@@ -122,10 +142,17 @@ export default function BackerCard({ data, navigate, index }) {
             elevation={1}
             style={backCardDiv}
           >
+            <div
+              style={{
+                margin: 2,
+                border: "0px solid black",
+                padding: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography style={{ color: "black" }}> {data.desc}</Typography>
+            </div>{" "}
             <br />
-            <Typography style={{ color: "white" }}> {data.desc}</Typography>
-            <br />
-
             {data.isSetMileStone &&
               data.isApproved &&
               data.amountToBeRaised !== data.amountRaised && (
@@ -162,7 +189,7 @@ const backCardDiv = {
   display: "flex",
   flexDirection: "column",
   borderRadius: 4,
-  backgroundColor: "rgb(229, 152, 102)",
+  backgroundColor: "white",
   padding: 5,
   height: 300,
   overflowY: "scroll",

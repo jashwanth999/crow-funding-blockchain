@@ -11,9 +11,10 @@
   background-color: rgb(89, 89, 89);
 }
 .starting__page {
-  background-image: url("https://kinsta.com/wp-content/uploads/2015/06/crowdfunding-options.png");
+  /* background-image: url("https://kinsta.com/wp-content/uploads/2015/06/crowdfunding-options.png"); */
   height: 90vh;
   background-size: cover;
+  background-color: rgb(44, 62, 80);
 }
 .cursive {
   margin-top: 5%;
@@ -21,33 +22,33 @@
   position: absolute;
   font-size: xx-large;
   font-weight: 600;
+  color: white;
 }
 .registration_and_login {
-  background-color: rgb(255, 158, 30);
+  background-color: rgb(44, 62, 80);
   height: 100vh;
   background-size: contain;
-
 }
 
 .register {
   margin-top: 10vh;
-  width: 100vw;
+  width: 90vw;
   position: absolute;
 }
-.register_content{
+.register_content {
   width: 40vw;
- text-align: left;
- 
+  text-align: left;
+  /* height: 100vh;
+  overflow-y: scroll; */
 }
-.register_content>.card{
-  background-color: rgb(232, 255, 255);
+.register_content > .card {
+  background-color: rgb(247, 249, 249);
 }
-p{
+p {
   font-weight: 500;
 }
-input{
+input {
   width: 100%;
   padding: 5px 5px;
   box-sizing: border-box;
-
 }

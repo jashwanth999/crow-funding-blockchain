@@ -1,7 +1,7 @@
+import { Checkbox } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import Navbar from "../auth_pages/Navbar";
 import { loadBlockchainData, loadWeb3 } from "../helpers/web3Helpers";
 import BackerNavbar from "./BackerNavbar";
 
@@ -10,6 +10,10 @@ export default function Funding() {
   const { id } = useParams();
   const account = useSelector((state) => state.account.account);
   const crowdFund = useSelector((state) => state.crowdFund.crowdFund);
+
+  const [checked, setChecked] = useState(false);
+
+  const [TCdata, setTCdata] = useState("");
   const navigate = useNavigate();
   const [data, setData] = useState({
     name: "milestone",
@@ -24,27 +28,56 @@ export default function Funding() {
 
     if (!funds) return alert("please fill all details");
 
+    if (!checked) return alert("Please agree to the terms");
+
     const backerEmail = localStorage.getItem("backerEmail");
 
     // console.log(backerEmail, funds);
 
-    // const web3 = window.web3;
+    const web3 = window.web3;
 
-    // let amountToSend = await web3.utils.toWei(funds, "ether");
+    const res = await crowdFund.methods.startUpProjectList(id).call();
 
-    // let gas = await web3.eth.estimateGas({from: account});
+    let amountReq = Number(web3.utils.fromWei(res.amountToBeRaised,'ether'));
+
+    let amountRaised = Number(web3.utils.fromWei(res.amountRaised,'ether'));
+
+    console.log(amountReq, amountRaised);
+
+    let finalAmount = funds;
+    if (Number(funds) >= amountReq - amountRaised) {
+      finalAmount = (amountReq - amountRaised).toString();
+    }
+
+
+    // console.log(finalAmount);
+
+    let amountToSend = await web3.utils.toWei(finalAmount, "ether");
+
+    // let gas = await web3.eth.estimateGas({ from: account });
 
     try {
-
-      
       await crowdFund.methods
-        .updateFunds(Number(id), backerEmail, Number(funds))
-        .send({ from: account });
+        .updateFunds(Number(id), backerEmail, amountToSend)
+        .send({
+          from: account,
+          value: amountToSend,
+          // gas: gas,
+        });
       navigate("/backer-home");
     } catch (e) {
       alert(e.message);
     }
   };
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const res = await crowdFund.methods.startUpProjectList2(id).call();
+
+      setTCdata(res.termsAndCondition);
+    }
+    fetchProjects();
+  }, []);
 
   useEffect(() => {
     loadWeb3();
@@ -87,6 +120,34 @@ export default function Funding() {
                     value={funds}
                     onChange={changeHandler}
                   />
+                  <br />
+
+                  <p
+                    class="card-title"
+                    style={{ fontSize: "16px", marginTop: "5px" }}
+                  >
+                    Terms and Conditions
+                  </p>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Checkbox
+                      onClick={() => setChecked(!checked)}
+                      checked={checked}
+                    />
+
+                    <p
+                      class="card-title"
+                      style={{ fontSize: "16px", marginTop: "5px" }}
+                    >
+                      {TCdata}
+                    </p>
+                  </div>
 
                   <button
                     type="button"
