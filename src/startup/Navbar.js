@@ -14,9 +14,13 @@ export default function Navbar() {
       style={{ padding: 10 }}
       className="navbar navbar-expand-lg navbar-light bg-dark "
     >
-      <button style={{ color: "white" }} className="navbar-brand" href="#">
+      <a
+        style={{ color: "white",  }}
+        className="navbar-brand"
+        href="#"
+      >
         Crowd Funding
-      </button>
+      </a>
       <button
         style={{ color: "white" }}
         className="navbar-toggler"

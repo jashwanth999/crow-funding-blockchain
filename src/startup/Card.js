@@ -8,11 +8,13 @@ export default function Card({
   index,
   abortProject,
   changeStage,
+  account,
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   if (data.title === "") return;
-  
+
+ 
   return (
     <div style={{ width: "30%", margin: 5 }}>
       <FlipCard
@@ -161,7 +163,7 @@ export default function Card({
               <Typography style={{ color: "black" }}> {data.desc}</Typography>
             </div>{" "}
             <br />
-            {!data.isSetMileStone && (
+            {!data.isSetMileStone && data.projectAddress === account && (
               <Button
                 onClick={() => {
                   navigate(`/startup-set-mile-stone/${index + 1}`);
@@ -194,6 +196,7 @@ export default function Card({
               }}
             >
               {data.amountRaised === data.amountToBeRaised &&
+                data.projectAddress === account &&
                 Number(data.stage) + 1 <= 3 && (
                   <Button
                     style={{ fontWeight: "bold" }}
@@ -210,17 +213,19 @@ export default function Card({
 
               <br />
 
-              <Button
-                style={{ fontWeight: "bold" }}
-                color="error"
-                variant="contained"
-                onClick={() => {
-                  abortProject(index);
-                }}
-              >
-                {" "}
-                Abort project
-              </Button>
+              {data.projectAddress === account && (
+                <Button
+                  style={{ fontWeight: "bold" }}
+                  color="error"
+                  variant="contained"
+                  onClick={() => {
+                    abortProject(index);
+                  }}
+                >
+                  {" "}
+                  Abort project
+                </Button>
+              )}
             </div>
           </Paper>
         }

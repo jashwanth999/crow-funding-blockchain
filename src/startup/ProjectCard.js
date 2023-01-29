@@ -72,6 +72,7 @@ export default function ProjectCard(props) {
             stage: res2.stage,
             adminApproveStage: res2.adminApproveStage,
             amountRecieved: res2.amountRecieved,
+            projectAddress:res2.projectAddress
           });
         }
 
@@ -105,6 +106,7 @@ export default function ProjectCard(props) {
             index={index}
             abortProject={abortProject}
             changeStage={changeStage}
+            account={account}
           />
         );
       })}
